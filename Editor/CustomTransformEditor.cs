@@ -14,7 +14,7 @@ namespace Subtegral.StickyNotes
         private Editor defaultEditor;
         private VisualElement transformContainer;
         private Transform _transform;
-        
+
         public override VisualElement CreateInspectorGUI()
         {
             _transform = target as Transform;
@@ -38,20 +38,30 @@ namespace Subtegral.StickyNotes
         private void OnNoteTake()
         {
             var noteField = transformContainer.Q("noteField");
-            //transformContainer.Remove(noteField);
-           var db = StickyNoteManagementUtils.LoadOrCreateDatabase();
-           if (db.GetStickyNoteFromHash(_transform.gameObject) != null)
-           {
-               Debug.Log("RECORD EXISTS");
-           }
-           else
-           {
-               var noteInstance = ScriptableObject.CreateInstance<StickyNote>();
-               AssetDatabase.AddObjectToAsset(noteInstance, db);
-               AssetDatabase.SaveAssets();
-               AssetDatabase.Refresh();
-               db.AddGameObjectToHashList(_transform.gameObject, noteInstance);
-           }
+            transformContainer.Remove(noteField);
+            var db = StickyNoteManagementUtils.LoadOrCreateDatabase();
+            var localId = StickyNoteManagementUtils.GetLocalIdentifierFromSceneObject(_transform.gameObject);
+            if (localId!=0 && db.GetStickySceneNotes(localId).Length!=0)
+            {
+                noteField = new VisualElement();
+                noteField.style.flexDirection = FlexDirection.Row;
+                foreach (var stickySceneNote in db.GetStickySceneNotes(localId))
+                {
+                    noteField.Add(new Label(stickySceneNote.paperColor.ToString()));
+                }
+                transformContainer.Add(noteField);
+            }
+            else
+            {
+                var noteInstance = ScriptableObject.CreateInstance<StickyNote>();
+                AssetDatabase.AddObjectToAsset(noteInstance, db);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+                db.NewStickySceneNote(
+                    StickyNoteManagementUtils.GetLocalIdentifierFromSceneObject(_transform.gameObject), noteInstance);
+                EditorUtility.SetDirty(db);
+                
+            }
         }
 
 

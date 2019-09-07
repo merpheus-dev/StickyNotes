@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Reflection;
 using Subtegral.StickyNotes;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
@@ -8,11 +9,12 @@ using Directory = UnityEngine.Windows.Directory;
 public static class StickyNoteManagementUtils
 {
     private static Texture2D _icon;
+
     public static Texture2D Icon
     {
         get
         {
-            if(_icon==null)
+            if (_icon == null)
                 _icon = Resources.Load<Texture2D>("StickyNoteIcon");
             return _icon;
         }
@@ -68,5 +70,17 @@ public static class StickyNoteManagementUtils
             var db = LoadOrCreateDatabase();
             //if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(noteInstance, out string guid, out long localId))
         }
+    }
+
+    public static long GetLocalIdentifierFromSceneObject(Object unityObject)
+    {
+        if (unityObject == null) return 0;
+        
+        var serializedObject = new SerializedObject(unityObject);
+        var inspectorProperty =
+            typeof(SerializedObject).GetProperty("inspectorMode", BindingFlags.NonPublic | BindingFlags.Instance);
+        inspectorProperty.SetValue(serializedObject,InspectorMode.Debug,null);
+        var serializedProperty = serializedObject.FindProperty("m_LocalIdentfierInFile"); //Thank you Joachim! Really!
+        return serializedProperty.longValue;
     }
 }
