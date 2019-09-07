@@ -12,7 +12,7 @@ namespace Subtegral.StickyNotes
         public override VisualElement CreateInspectorGUI()
         {
             _note = target as StickyNote;
-            var database = StickNoteManagementUtils.LoadOrCreateDatabase();
+            var database = StickyNoteManagementUtils.LoadOrCreateDatabase();
             var root = new VisualElement();
             var noteStyleSheet = Resources.Load<StyleSheet>("StickyNotesStyle");
             root.styleSheets.Add(noteStyleSheet);
@@ -63,10 +63,10 @@ namespace Subtegral.StickyNotes
 
         public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
         {
-            if (StickNoteManagementUtils.Icon == null)
+            if (StickyNoteManagementUtils.Icon == null)
                 return null;
             var texture = new Texture2D(width,height);
-            EditorUtility.CopySerialized (StickNoteManagementUtils.Icon, texture);
+            EditorUtility.CopySerialized (StickyNoteManagementUtils.Icon, texture);
             return texture;
         }
     }

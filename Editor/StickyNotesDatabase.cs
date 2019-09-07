@@ -5,22 +5,27 @@ namespace Subtegral.StickyNotes
 {
     public class StickyNotesDatabase : ScriptableObject
     {
-        public Dictionary<string, StickyNote> GameObjectHashMap = new Dictionary<string, StickyNote>();
-        public void AddGameObjectToHashList(string guid, StickyNote noteInstance)
+        public List<StickyNoteBinding> Bindings = new List<StickyNoteBinding>();
+
+        public void AddGameObjectToHashList(GameObject gameObject, StickyNote noteInstance)
         {
-            if (GameObjectHashMap.ContainsKey(guid))
+            if (Bindings.Exists(x => x.Key == gameObject))
                 return;
-            GameObjectHashMap.Add(guid, noteInstance);
+            Bindings.Add(new StickyNoteBinding
+            {
+                Key = gameObject, Note = noteInstance
+            });
         }
 
-        public void RemoveNoteWithHash(string guid)
+        public void RemoveNoteWithHash(GameObject gameObject)
         {
-            GameObjectHashMap.Remove(guid);
+            Bindings.RemoveAll(x=>x.Key==gameObject);
         }
 
-        public StickyNote GetStickyNoteFromHash(string guid)
+        public StickyNote GetStickyNoteFromHash(GameObject gameObject)
         {
-            return GameObjectHashMap.TryGetValue(guid, out StickyNote stickyNote) ? stickyNote : null;
+            return Bindings.Find(x => x.Key == gameObject)?.Note;
+            
         }
     }
 }

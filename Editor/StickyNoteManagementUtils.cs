@@ -5,7 +5,7 @@ using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 using Directory = UnityEngine.Windows.Directory;
 
-public static class StickNoteManagementUtils
+public static class StickyNoteManagementUtils
 {
     private static Texture2D _icon;
     public static Texture2D Icon
@@ -40,7 +40,7 @@ public static class StickNoteManagementUtils
     [MenuItem("Subtegral/Sticky Notes/Setup")]
     public static void StickNotesSetup()
     {
-        StickNoteManagementUtils.LoadOrCreateDatabase();
+        StickyNoteManagementUtils.LoadOrCreateDatabase();
     }
 
     [MenuItem("Assets/Create/Sticky Note", false, 100)]
@@ -48,7 +48,7 @@ public static class StickNoteManagementUtils
     {
         var noteActionInstance = ScriptableObject.CreateInstance<StickyNoteAction>();
         ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, noteActionInstance, "NewStickyNote",
-            StickNoteManagementUtils.Icon, null);
+            StickyNoteManagementUtils.Icon, null);
     }
 
     class StickyNoteAction : EndNameEditAction
@@ -66,8 +66,7 @@ public static class StickNoteManagementUtils
             ProjectWindowUtil.ShowCreatedAsset(noteInstance);
 
             var db = LoadOrCreateDatabase();
-            if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(noteInstance, out string guid, out long localId))
-                db.AddGameObjectToHashList(guid, noteInstance);
+            //if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(noteInstance, out string guid, out long localId))
         }
     }
 }
