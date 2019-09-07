@@ -8,7 +8,15 @@ using Directory = UnityEngine.Windows.Directory;
 public static class StickNoteManagementUtils
 {
     private static Texture2D _icon;
-    public static Texture2D Icon => _icon ?? Resources.Load<Texture2D>("StickyNoteIcon");
+    public static Texture2D Icon
+    {
+        get
+        {
+            if(_icon==null)
+                _icon = Resources.Load<Texture2D>("StickyNoteIcon");
+            return _icon;
+        }
+    }
 
     public static StickyNotesDatabase LoadOrCreateDatabase()
     {
@@ -27,6 +35,12 @@ public static class StickNoteManagementUtils
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         return soInstance;
+    }
+
+    [MenuItem("Subtegral/Sticky Notes/Setup")]
+    public static void StickNotesSetup()
+    {
+        StickNoteManagementUtils.LoadOrCreateDatabase();
     }
 
     [MenuItem("Assets/Create/Sticky Note", false, 100)]
@@ -53,7 +67,7 @@ public static class StickNoteManagementUtils
 
             var db = LoadOrCreateDatabase();
             if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(noteInstance, out string guid, out long localId))
-                db.AddGameObjectToHashList(guid,noteInstance);
+                db.AddGameObjectToHashList(guid, noteInstance);
         }
     }
 }

@@ -1,0 +1,32 @@
+TextField{
+    background-color:#FCD462;
+
+}
+TextInput{
+     background-color:#FCD462;
+     background-image: none;
+     color:#000000;
+}
+#row{
+    background-color: #FCD462;
+    border-radius: 4px;
+    padding: 5px;
+}
+#headerTextField > TextInput{
+    font-size: 25px;
+    -unity-font-style:bold;
+    color: #333333;
+}
+#header{
+    align-content: center;
+    align-items: center;
+    flex-grow: initial;
+    align-self: stretch;
+    justify-content:flex-start;
+}
+#contentTextField {
+    align-content: stretch;
+    align-self: stretch;
+    flex-direction: column;
+    width: 300px;
+}
